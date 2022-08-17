@@ -25,13 +25,16 @@ const params = computed(() => {
     paginate: true,
   };
 });
-const { items, latestQuery } = useFind({
+const {
+  items: users,
+  latestQuery,
+}: { items: ComputedRef<User[]>; latestQuery: null | object } = useFind({
   model: User,
   params,
 });
-const users = items as ComputedRef<User[]>;
+// const users = items as ComputedRef<User[]>;
 const { next, prev, canNext, canPrev, currentPage, pageCount, toPage } =
-  usePagination(pagination, latestQuery);
+  usePagination(pagination, ref(latestQuery));
 </script>
 
 <template>

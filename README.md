@@ -34,14 +34,10 @@ Example](https://github.com/marshallswain/vitesse-feathers-pinia-example)
 
 * `src/stores/user.ts` shows how to define class properties
 * `src/components/UserRow.vue` uses the defined properties
-* `src/pages/index.vue` shows how to cast values returned from `useFind` :
+* `src/pages/index.vue` shows how to type returned values from `useFind` :
 
 ```
-const { items, latestQuery } = useFind({
-  model: User,
-  params,
-});
-const users = items as ComputedRef<User[]>;
+const { items: users, latestQuery }: { items: ComputedRef<User[]>; latestQuery: null | object } = useFind({ model: User, params });
 ```
 
 ## Setup
