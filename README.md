@@ -1,8 +1,48 @@
-# Feathers-Pinia Pagination Example
+# Feathers-Pinia TypeScript Example
 
-![App Screenshot](screenshot.jpg)
+```
 
-This example app uses `useFind` and `usePagination` from Feathers-Pinia.
+export class User extends BaseModel {
+  id: Id;
+  name: string;
+  age: number;
+  type: string;
+  class: string;
+}
+
+----------------
+
+<template>
+  <tr>
+    <td>{{ user.name }}</td>
+    <td>{{ user.age }}</td>
+    <td>{{ user.class }}</td>
+  </tr>
+</template>
+<script setup lang="ts">
+import { User } from "./../stores/user";
+defineProps({
+  user: { type: User, required: true },
+});
+</script>
+```
+
+This example is based on [Feathers-Pinia Pagination
+Example](https://github.com/marshallswain/vitesse-feathers-pinia-example)
+
+## TypeScript features
+
+`src/stores/user.ts` shows how to define class properties
+`src/components/UserRow.vue` uses the defined properties
+`src/pages/index.vue` shows how to cast values returned from `useFind` :
+
+```
+const { items, latestQuery } = useFind({
+  model: User,
+  params,
+});
+const users = items as ComputedRef<User[]>;
+```
 
 ## Setup
 
