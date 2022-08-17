@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import { useFind, usePagination } from 'feathers-pinia'
-import { useUsers } from '~/stores/user'
+import { Ref, ComputedRef } from "vue";
+import { useFind, usePagination } from "feathers-pinia";
+import { useUsers, User } from "~/stores/user";
 
-const userStore = useUsers()
+useUsers();
 
-const selectedClass = ref(null)
-const search = ref('')
+const selectedClass = ref(null);
+const search = ref("");
 
-const current = ref(null)
-const setCurrent = (item: typeof userStore.Model) => current.value = item
+const current: Ref<User | null> = ref(null);
+const setCurrent = (item: User) => (current.value = item);
 
-const pagination = reactive({ $limit: 5, $skip: 0 })
+const pagination = reactive({ $limit: 5, $skip: 0 });
 const params = computed(() => {
-  const nameFilter = { name: { $regex: search.value, $options: 'igm' } }
-  const classFilter = { class: selectedClass.value }
+  const nameFilter = { name: { $regex: search.value, $options: "igm" } };
+  const classFilter = { class: selectedClass.value };
 
   return {
     query: {
@@ -22,10 +23,15 @@ const params = computed(() => {
       ...nameFilter,
     },
     paginate: true,
-  }
-})
-const { items: users, latestQuery } = useFind({ model: userStore.Model, params })
-const { next, prev, canNext, canPrev, currentPage, pageCount, toPage } = usePagination(pagination, latestQuery)
+  };
+});
+const { items, latestQuery } = useFind({
+  model: User,
+  params,
+});
+const users = items as ComputedRef<User[]>;
+const { next, prev, canNext, canPrev, currentPage, pageCount, toPage } =
+  usePagination(pagination, latestQuery);
 </script>
 
 <template>
@@ -33,7 +39,11 @@ const { next, prev, canNext, canPrev, currentPage, pageCount, toPage } = usePagi
     <div class="flex flex-row items-center space-x-1">
       <RowsPerPageSelector v-model:rows-per-page="pagination.$limit" />
       <ClassSelector v-model:school-class="selectedClass" />
-      <TextInput v-model:value="search" label="Search by Name" placeholder="name" />
+      <TextInput
+        v-model:value="search"
+        label="Search by Name"
+        placeholder="name"
+      />
     </div>
 
     <!-- User Table -->
@@ -46,17 +56,37 @@ const { next, prev, canNext, canPrev, currentPage, pageCount, toPage } = usePagi
         </tr>
       </thead>
       <tbody>
-        <UserRow v-for="user in users" :key="user.id" :user="user" :class="{ active: user === current }" @click="() => setCurrent(user)" />
+        <UserRow
+          v-for="user in users"
+          :key="user.id"
+          :user="user"
+          :class="{ active: user === current }"
+          @click="() => setCurrent(user)"
+        />
       </tbody>
     </table>
 
     <!-- Pagination -->
     <div class="btn-group mt-4">
-      <button class="btn" :class="{'opacity-50 cursor-not-allowed': !canPrev}" @click="canPrev && prev()">
+      <button
+        class="btn"
+        :class="{ 'opacity-50 cursor-not-allowed': !canPrev }"
+        @click="canPrev && prev()"
+      >
         Previous
       </button>
-      <PaginationButton v-for="page in pageCount" :key="page" :page="page" :current-page="currentPage" @click="toPage(page)" />
-      <button class="btn" :class="{'opacity-50 cursor-not-allowed': !canNext}" @click="canNext && next()">
+      <PaginationButton
+        v-for="page in pageCount"
+        :key="page"
+        :page="page"
+        :current-page="currentPage"
+        @click="toPage(page)"
+      />
+      <button
+        class="btn"
+        :class="{ 'opacity-50 cursor-not-allowed': !canNext }"
+        @click="canNext && next()"
+      >
         Next
       </button>
     </div>
