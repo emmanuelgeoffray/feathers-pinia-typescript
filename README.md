@@ -32,9 +32,9 @@ Example](https://github.com/marshallswain/vitesse-feathers-pinia-example)
 
 ## TypeScript features
 
-`src/stores/user.ts` shows how to define class properties
-`src/components/UserRow.vue` uses the defined properties
-`src/pages/index.vue` shows how to cast values returned from `useFind` :
+* `src/stores/user.ts` shows how to define class properties
+* `src/components/UserRow.vue` uses the defined properties
+* `src/pages/index.vue` shows how to cast values returned from `useFind` :
 
 ```
 const { items, latestQuery } = useFind({
